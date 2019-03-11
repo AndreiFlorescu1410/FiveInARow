@@ -14,7 +14,8 @@ class Algorithm{
 public:
     char is_adjacent(Board, int, int);
     int evaluation(Board, int, int);
+    int minimaxAlphaBeta(Board & board, int depth, bool isMax, int alpha, int beta, int x , int y);
     int AlphaBeta(Board&, int, int, int, int, int, bool);
-    int NextMove(Board&);
+    vector <int> BestMove(Board);
 };
 #endif

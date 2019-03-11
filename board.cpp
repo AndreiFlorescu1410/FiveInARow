@@ -18,14 +18,16 @@ Board::Board()
 void Board::Print()
 {
     antet
+    cout<<"  ";
     for(int i = 0; i < N; i++)
-        cout <<char(65+i) << " ";
+        cout <<i << " ";
     cout << endl;
     for(int i = 0; i < N; i++)
     {
+        cout<< i << " ";
         for(int j = 0; j < N; j++)
             cout << board[i][j] << " ";
-        cout << " " << char(65+i) << endl;
+        cout<<endl;
     }
 }
 
@@ -62,6 +64,8 @@ bool Board::Win()
                         O_count++;
                         k++;
                     }
+                    if(abs(O_count - O_countUP) == 5)
+                        return 1;
 
                 }
                 else
@@ -74,91 +78,93 @@ bool Board::Win()
                         k++;
                     }
                     k = 1;
-                    while(board.GetValue(x, y-k) == 'X')
+                    while(GetValue(x, y-k) == 'X')
                     {
                         X_count++;
                         k++;
                     }
+                    if(abs(X_count - X_countUP) == 5)
+                        return 1;
                 }
         //caut pe verticala
-        if(board.GetValue(x+1, y) != '-' || board.GetValue(x-1, y) != '-')
-            if(board.GetValue(x+1, y) == 'O' || board.GetValue(x-1, y) == 'O')
+        if(GetValue(x+1, y) != '-' || GetValue(x-1, y) != '-')
+            if(GetValue(x+1, y) == 'O' || GetValue(x-1, y) == 'O')
             {
                 O_count = 0, O_countUP = 0;
                 k = 1;
-                capped_up = 0, capped_down = 0;
-                while(board.GetValue(x+k,y) == 'O')
+                while(GetValue(x+k,y) == 'O')
                 {
                     O_countUP++;
                     k++;
                 }
                 k = 1;
-                while(board.GetValue(x-k, y) == 'O')
+                while(GetValue(x-k, y) == 'O')
                 {
                     O_count++;
                     k++;
                 }
+                if(abs(O_count - O_countUP) == 5)
+                        return 1;
 
             }
             else
             {
                 X_count = 0, X_countUP = 0;
                 k = 1;
-                capped_up = 0, capped_down = 0;
-                cout<<board.GetValue(x+k,y);
-                while(board.GetValue(x+k,y) == 'X')
+                while(GetValue(x+k,y) == 'X')
                 {
-                    cout<<"dreapta ";
                     X_countUP++;
                     k++;
                 }
                 k = 1;
-                while(board.GetValue(x-k, y) == 'X')
+                while(GetValue(x-k, y) == 'X')
                 {
-                    cout<<"stanga ";
                     X_count++;
                     k++;
                 }
+                if(abs(X_count - X_countUP) == 5)
+                    return 1;
 
             }
         //Caut pe diagonala
-        if(board.GetValue(x+1, y+1) != '-' || board.GetValue(x-1, y-1) != '-')
-            if(board.GetValue(x+1, y+1) == 'O' || board.GetValue(x-1, y-1) == 'O')
+        if(GetValue(x+1, y+1) != '-' || GetValue(x-1, y-1) != '-')
+            if(GetValue(x+1, y+1) == 'O' || GetValue(x-1, y-1) == 'O')
             {
                 O_count = 0, O_countUP = 0;
                 k = 1;
-                capped_up = 0, capped_down = 0;
-                while(board.GetValue(x+k,y+k) == 'O')
+                while(GetValue(x+k,y+k) == 'O')
                 {
                     O_countUP++;
                     k++;
                 }
                 k = 1;
-                while(board.GetValue(x-k, y-k) == 'O')
+                while(GetValue(x-k, y-k) == 'O')
                 {
                     O_count++;
                     k++;
                 }
+                if(abs(O_count - O_countUP) == 5)
+                    return 1;
             }
             else
             {
                 X_count = 0, X_countUP = 0;
                 k = 1;
-                capped_up = 0, capped_down = 0;
-                while(board.GetValue(x+k,y+k) == 'X')
+                while(GetValue(x+k,y+k) == 'X')
                 {
-                    cout<< "Up ";
                     X_countUP++;
                     k++;
                 }
 
                 k = 1;
-                while(board.GetValue(x-k, y-k) == 'X')
+                while(GetValue(x-k, y-k) == 'X')
                 {
-                    cout<< "down ";
                     X_count++;
                     k++;
                 }
+                if(abs(X_count - X_countUP) == 5)
+                    return 1;
             }
+        }
 
 }
