@@ -16,7 +16,7 @@ int main()
     while(masa.Win() == 0)
     {
         masa.Print();
-        cout<<"E randul tau";cin>>x>>y;
+        cout<<"E randul tau ";cin>>x>>y;
         masa.SetValue(x,y,'O');
         masa.Print();
         vector <int> next;

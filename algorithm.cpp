@@ -220,6 +220,71 @@ int Algorithm::evaluation(Board board, int x, int y)
                     X_patterns[pattern_value]++;
             }
         }
+    if(board.GetValue(x-1, y+1) != '-' || board.GetValue(x+1, y-1) != '-')
+        if(board.GetValue(x-1, y+1) == 'O' || board.GetValue(x+1, y-1) == 'O')
+        {
+            O_count = 0, O_countUP = 0;
+            k = 1;
+            capped_up = 0, capped_down = 0;
+            while(board.GetValue(x-k,y+k) == 'O')
+            {
+                O_countUP++;
+                k++;
+            }
+            k = 1;
+            while(board.GetValue(x+k, y-k) == 'O')
+            {
+                O_count++;
+                k++;
+            }
+            if(board.GetValue(x-k,y+k) == 'X')
+                capped_up = 1;
+            if(board.GetValue(x+k,y-k) == 'X')
+                capped_down = 1;
+            if(O_count > 1 || O_countUP > 1)
+            {
+                pattern_value = abs(O_count - O_countUP);
+                if(capped_down == 1 || capped_up == 1)
+                    O_patterns[pattern_value+3]++;
+                else
+                    O_patterns[pattern_value]++;
+            }
+
+        }
+        else
+        {
+            X_count = 0, X_countUP = 0;
+            k = 1;
+            capped_up = 0, capped_down = 0;
+            while(board.GetValue(x-k,y+k) == 'X')
+            {
+                X_countUP++;
+                k++;
+            }
+
+            k = 1;
+            while(board.GetValue(x+k, y-k) == 'X')
+            {
+                X_count++;
+                k++;
+            }
+            if(board.GetValue(x-k,y+k) == 'O')
+                capped_up = 1;
+            if(board.GetValue(x+k,y-k) == 'O')
+                capped_down = 1;
+            if(X_count == 1 || X_countUP == 1)
+                sum_X++;
+            else if(X_count == 2 || X_countUP == 2)
+                sum_X+=5;
+            if(X_count > 2 || X_countUP > 2)
+            {
+                pattern_value = abs(X_count - X_countUP);
+                if(capped_down == 1 || capped_up == 1)
+                    X_patterns[pattern_value+3]++;
+                else
+                    X_patterns[pattern_value]++;
+            }
+        }
     sum_O += 150*O_patterns[0] + 100*O_patterns[1] + 150*O_patterns[2] + 10*O_patterns[3] + 1000*O_patterns[4] + 150*O_patterns[5] + 1*O_patterns[6];
     sum_X += 150*X_patterns[0] + 100*X_patterns[1] + 150*X_patterns[2] + 10*X_patterns[3] + 1000*X_patterns[4] + 150*X_patterns[5] + 1*X_patterns[6];
     sum = sum_X - sum_O;
@@ -314,7 +379,7 @@ int Algorithm::evaluation(Board board, int x, int y)
 int Algorithm::AlphaBeta(Board &board, int depth, int alpha, int beta, int x, int y, bool maximizingPlayer)
 {
     int value;
-    board.SetValue(x,y,((maximizingPlayer == 1)?('X'):('O')));
+    board.SetValue(x,y,((maximizingPlayer == 0)?('X'):('O')));
     if(board.Win() == 1)
     {
         board.SetValue(x,y,'-');
@@ -381,26 +446,25 @@ vector <int> Algorithm::BestMove(Board board)
                 adjacents_x.push_back(i);
                 adjacents_y.push_back(j);
             }
-    int best = AlphaBeta(board,3,INT_MIN,INT_MAX,adjacents_x[i],adjacents_y[i],0), best_i, best_j;
+    int best = AlphaBeta(board,2,INT_MIN,INT_MAX,adjacents_x[i],adjacents_y[i],1), best_i=7, best_j=7;
     int value=0;
     for(i = 0; i < adjacents_x.size(); i++)
     {
-        value = AlphaBeta(board,3,INT_MIN,INT_MAX,adjacents_x[i],adjacents_y[i],0);
+        value = AlphaBeta(board,2,INT_MIN,INT_MAX,adjacents_x[i],adjacents_y[i],1);
         //value = AlphaBeta(board, 3, INT_MIN, INT_MAX, adjacents_x[i], adjacents_y[i],0);
         //cout << adjacents_x[i] << " " << adjacents_y[i] << " " << value<< " " << evaluation(board, adjacents_x[i],adjacents_y[i])<<endl;
 
-        if (value <= best)
+        if (value >= best)
         {
             best = value;
             best_i = adjacents_x[i];
             best_j = adjacents_y[i];
         }
     }
-    vector <int> re;
-
-    re.push_back(best_i);
-    re.push_back(best_j);
-    return re;
+    vector <int> v;
+    v.push_back(best_i);
+	v.push_back(best_j);
+	return v;
 
 
 }
