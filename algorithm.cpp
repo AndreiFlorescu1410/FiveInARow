@@ -2,6 +2,11 @@
 #include "algorithm.h"
 using namespace std;
 
+#define MAX(a,b) a>b?a:b
+#define MIN(a,b) a<b?a:b
+
+
+
 char Algorithm::is_adjacent(Board board, int x, int y)
 {
     if(board.GetValue(x+1, y) != 'X' || board.GetValue(x+1, y+1) != 'X' || board.GetValue(x+1, y-1) != 'X' || board.GetValue(x, y-1) != 'X' || board.GetValue(x, y+1) != 'X' || board.GetValue(x-1, y-1) != 'X' || board.GetValue(x-1, y) != 'X'|| board.GetValue(x-1, y+1) != 'X')
@@ -212,4 +217,51 @@ int Algorithm::evaluation(Board board, int x, int y)
     cout<<"Pentru X avem: ";
     sum_X = 150*X_patterns[0] + 100*X_patterns[1] + 150*X_patterns[2] + 10*X_patterns[3] + 1000*X_patterns[4] + 150*X_patterns[5] + 1*X_patterns[6];
     cout<<sum_X;
+}
+
+int Algorithm::AlphaBeta(Board &board, int depth, int alpha, int beta, int x, int y, bool maximizingPlayer)
+{
+    if(board.Win() == 1)
+        if(maximizingPlayer == 1)
+            return INT_MAX;
+        else
+            return INT_MIN;
+    if(depth == 0)
+        return evaluation(board, x, y);
+    vector <int> adjacents_x,adjacents_y;
+    int i, j;
+    for(i = 0; i < N; i++)
+        for(j = 0; j < N; j++)
+            if (board.GetValue(i,j) == '-' && is_adjacent(board, i, j) != '0')
+            {
+                cout<<"DA";
+                adjacents_x.push_back(i);
+                adjacents_y.push_back(j);
+            }
+    int value;
+    if(maximizingPlayer == 1)
+    {
+        value = INT_MIN;
+        for(i = 0; i < adjacents_x.size(); i++)
+        {
+            value = MAX(value, AlphaBeta(board, depth -1, alpha, beta, adjacents_x[i], adjacents_y[i], 0));
+            alpha = MAX(alpha, value);
+            if(alpha >= beta)
+                break;
+        }
+        return value;
+    }
+    else
+    {
+        value = INT_MAX;
+        for(i = 0; i < adjacents_x.size(); i++)
+        {
+            value = MIN(value, AlphaBeta(board, depth -1, alpha, beta, adjacents_x[i], adjacents_y[i], 0));
+            alpha = MIN(alpha, value);
+            if(alpha >= beta)
+                break;
+        }
+        return value;
+    }
+
 }
